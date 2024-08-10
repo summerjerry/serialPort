@@ -30,13 +30,15 @@ public class SerialPort {
         }
         try {
             // 获取ROOT权限
-            // NOTE(qingxia): Notice su is in different place for system
+            // NOTE(qingxia): Notice su is in different place for system，/system/xbin/su
             // Process su = Runtime.getRuntime().exec("/system/bin/su");
-            XLog.i("SerialPort", "before Runtime.getRuntime().exec(\"/system/xbin/su\")");
-            Process su = Runtime.getRuntime().exec("/system/xbin/su");
+            Process su = Runtime.getRuntime().exec("su");
+            XLog.i("SerialPort","run /system/xbin/su " + file.getAbsolutePath());
             // 修改文件属性为 [可读 可写 可执行]
             String cmd = "chmod 777 " + file.getAbsolutePath() + "\n" + "exit\n";
+            XLog.i("SerialPort","run " + cmd);
             su.getOutputStream().write(cmd.getBytes());
+
             if (0 == su.waitFor() && file.canRead() && file.canWrite() && file.canExecute()) {
                 return true;
             }
