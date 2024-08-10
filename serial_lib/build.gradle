@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "30.0.1"
+    compileSdkVersion 34
+    buildToolsVersion "30.0.2"
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 33
         versionCode 400
         versionName "4.0.0"
         externalNativeBuild {
@@ -16,6 +16,7 @@ android {
         }
 
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -34,6 +35,7 @@ android {
         // 剔除这个包下的所有文件（不会移除签名信息）
         exclude 'META-INF/*******'
     }
+    ndkVersion '21.4.7075529'
 
     android.libraryVariants.all { variant ->
         // aar 输出文件名配置
@@ -41,21 +43,45 @@ android {
             outputFileName = "${rootProject.name}-${android.defaultConfig.versionName}.aar"
         }
     }
+
+    buildFeatures{
+        dataBinding=true
+        viewBinding=true
+    }
+}
+
+repositories {
+    maven {
+        url "https://maven.google.com"
+    }
+
+    jcenter()
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'com.google.android.material:material:1.6.0'
+    implementation('androidx.annotation:annotation-jvm:1.8.2')
     api 'com.github.cl-6666:xlog:v3.0.0'
     testImplementation 'junit:junit:4.12'
+
+    constraints {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {
+            because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")
+        }
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0") {
+            because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
+        }
+    }
 }
 
 afterEvaluate {
     // 排除 BuildConfig.class 和 R.class
-    generateReleaseBuildConfig.enabled = false
+    // generateReleaseBuildConfig.enabled = false
     generateDebugBuildConfig.enabled = false
     generateReleaseResValues.enabled = false
     generateDebugResValues.enabled = false

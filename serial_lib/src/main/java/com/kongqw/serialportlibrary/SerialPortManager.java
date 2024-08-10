@@ -19,7 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 
-public class SerialPortManager extends SerialPort {
+    public class SerialPortManager extends SerialPort {
 
     private static final String TAG = SerialPortManager.class.getSimpleName();
     private FileInputStream mFileInputStream;

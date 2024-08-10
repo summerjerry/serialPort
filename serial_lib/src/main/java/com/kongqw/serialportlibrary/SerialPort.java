@@ -1,5 +1,9 @@
 package com.kongqw.serialportlibrary;
 
+import android.util.Log;
+
+import com.cl.log.XLog;
+
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -19,13 +23,17 @@ public class SerialPort {
      * @return 权限修改是否成功
      */
     boolean chmod777(File file) {
+        Log.i("SerialPort","Runtime.getRuntime().exec(\"/system/xbin/su\")");
         if (null == file || !file.exists()) {
             // 文件不存在
             return false;
         }
         try {
             // 获取ROOT权限
-            Process su = Runtime.getRuntime().exec("/system/bin/su");
+            // NOTE(qingxia): Notice su is in different place for system
+            // Process su = Runtime.getRuntime().exec("/system/bin/su");
+            XLog.i("SerialPort", "before Runtime.getRuntime().exec(\"/system/xbin/su\")");
+            Process su = Runtime.getRuntime().exec("/system/xbin/su");
             // 修改文件属性为 [可读 可写 可执行]
             String cmd = "chmod 777 " + file.getAbsolutePath() + "\n" + "exit\n";
             su.getOutputStream().write(cmd.getBytes());
